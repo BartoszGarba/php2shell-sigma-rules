@@ -55,4 +55,4 @@ Replace `splunk` with the backend for your SIEM.
 
 ## License
 
-[CC0 1.0](LICENSE). Use, modify and share the rules however you want. Attribution is appreciated but not required.
+[Unlicense](LICENSE). Credit appreciated, not required.
