@@ -5,7 +5,7 @@ related:
       type: similar
 status: experimental
 description: |
-    Detects when a PHP worker spawns a suspicious child process.
+    Detects when a PHP worker or the web server user spawns a suspicious child process.
     It is unusual for a PHP worker to spawn a child process, which may indicate malicious activity or exploitation of vulnerabilities.
     It is associated with vulnerabilities such as CVE-2026-109618 and CVE-2026-109619, which can be exploited to execute arbitrary code.
 references:
@@ -34,6 +34,12 @@ detection:
         - ParentImage|endswith:
               - '/apache2'
               - '/httpd'
+        # Sysmon for Linux leaves ParentImage empty for forked php-fpm/apache workers
+        - User:
+              - 'www-data'
+              - 'apache'
+              - 'nginx'
+              - 'http'
     selection_child:
         Image|endswith:
             - '/sh'
@@ -59,4 +65,5 @@ detection:
 falsepositives:
     - Web applications that legitimately execute system commands via exec(), shell_exec(), system() or proc_open() (e.g. admin panels, backup or monitoring plugins)
     - CGI scripts executed by Apache that invoke a shell
+    - Cron jobs or maintenance scripts running as the web server user (e.g. wp-cron via PHP CLI)
 level: high
