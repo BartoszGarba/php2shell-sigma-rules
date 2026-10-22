@@ -1,0 +1,56 @@
+title: PHP Spawns Suspicious Child Process - Windows
+id: d5236104-89fc-4e0c-b5c4-f887cb4eda0d
+related:
+    - id: eab25a01-54fc-4d4b-8280-a837937b98cd
+      type: similar
+status: experimental
+description: |
+    Detects when a PHP worker on Windows (php-cgi.exe under IIS or nginx, httpd.exe with mod_php) spawns a suspicious child process.
+    It is unusual for a PHP worker to spawn a child process, which may indicate malicious activity or exploitation of vulnerabilities.
+    It is associated with vulnerabilities such as CVE-2026-109618 and CVE-2026-109619, which can be exploited to execute arbitrary code.
+references:
+    - https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w
+    - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+author: Bartosz Garba
+date: 2026-10-22
+tags:
+    - attack.initial-access
+    - attack.t1190
+    - attack.execution
+    - attack.t1059.001
+    - attack.t1059.003
+    - attack.persistence
+    - attack.t1505.003
+    - cve.2026-109618
+    - cve.2026-109619
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - '\php-cgi.exe'
+            - '\httpd.exe'
+    selection_child:
+        Image|endswith:
+            - '\cmd.exe'
+            - '\powershell.exe'
+            - '\pwsh.exe'
+            - '\whoami.exe'
+            - '\net.exe'
+            - '\net1.exe'
+            - '\systeminfo.exe'
+            - '\ipconfig.exe'
+            - '\certutil.exe'
+            - '\bitsadmin.exe'
+            - '\curl.exe'
+            - '\rundll32.exe'
+            - '\mshta.exe'
+            - '\wscript.exe'
+            - '\cscript.exe'
+    condition: all of selection_*
+falsepositives:
+    - Web applications that legitimately execute system commands via exec(), shell_exec(), system() or proc_open() (e.g. admin panels, backup or monitoring plugins)
+    - PHP mail() with sendmail_path pointing to a local sendmail wrapper (e.g. XAMPP)
+    - CGI scripts executed by Apache that invoke cmd.exe
+level: high

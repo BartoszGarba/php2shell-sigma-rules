@@ -9,17 +9,18 @@ Both bugs are memory corruption issues in php-src that can lead to RCE. Affected
 | Rule                                                                                                     | Platform | Level | Status       |
 | -------------------------------------------------------------------------------------------------------- | -------- | ----- | ------------ |
 | [PHP Spawns Suspicious Child Process](rules/linux/process_creation/proc_creation_lnx_php_susp_child.yml) | Linux    | high  | experimental |
+| [PHP Spawns Suspicious Child Process - Windows](rules/windows/process_creation/proc_creation_win_php_susp_child.yml) | Windows  | high  | experimental |
 
 ## Approach
 
-The rules do not look for the exploit itself. They look for what usually comes after it: a PHP worker (php-fpm, php-cgi, Apache with mod_php) starting a shell, recon tools or downloaders. This does not depend on the payload or the web application, so it also catches other PHP RCEs and webshells.
+The rules do not look for the exploit itself. They look for what usually comes after it: a PHP worker (php-fpm, php-cgi, Apache with mod_php; on Windows php-cgi.exe under IIS or nginx, httpd.exe) starting a shell, recon tools or downloaders. This does not depend on the payload or the web application, so it also catches other PHP RCEs and webshells.
 
 ## Requirements
 
 Process creation events with parent process info:
 
-- Sysmon for Linux (Event ID 1), or
-- auditd `execve` events mapped to Sigma fields
+- Linux: Sysmon for Linux (Event ID 1), or auditd `execve` events mapped to Sigma fields
+- Windows: Sysmon (Event ID 1), or Security 4688 with command line auditing enabled
 
 ## Usage
 
@@ -35,7 +36,8 @@ Replace `splunk` with the backend for your SIEM.
 ## Known limitations
 
 - Exploit code that runs only in the PHP process memory and never starts a child process is not detected.
-- The sendmail filter can be bypassed by adding `/usr/sbin/sendmail` to the command line.
+- The sendmail filter (Linux) can be bypassed by adding `/usr/sbin/sendmail` to the command line.
+- The Windows rule has no sendmail filter. XAMPP-style setups with a local sendmail wrapper may need one.
 - Apache servers running CGI scripts will generate noise.
 - PHP embedded in other runtimes (FrankenPHP, RoadRunner) is not covered.
 - Not tested against a real exploit yet. No public exploit was available at the time of writing.
