@@ -19,10 +19,10 @@ On Linux the rule also matches on the web server user (`www-data`, `apache`, `ng
 
 ## Requirements
 
-Process creation events with parent process info:
+Process creation events:
 
-- Linux: Sysmon for Linux (Event ID 1), or auditd `execve` events mapped to Sigma fields
-- Windows: Sysmon (Event ID 1), or Security 4688 with command line auditing enabled
+- Linux: Sysmon for Linux (Event ID 1), or auditd `execve` events mapped to Sigma fields. The `User` field is required, `ParentImage` is used when available.
+- Windows: Sysmon (Event ID 1), or Security 4688 with command line auditing enabled. `ParentImage` is required.
 
 ## Usage
 
@@ -34,6 +34,7 @@ sigma convert -t splunk --without-pipeline rules/
 ```
 
 Replace `splunk` with the backend for your SIEM.
+
 ## Known limitations
 
 - Exploit code that runs only in the PHP process memory and never starts a child process is not detected.
