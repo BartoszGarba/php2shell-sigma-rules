@@ -1,5 +1,8 @@
-title: PHP Spawns Suspicious Child Process
+title: PHP Spawns Suspicious Child Process - Linux
 id: eab25a01-54fc-4d4b-8280-a837937b98cd
+related:
+    - id: d5236104-89fc-4e0c-b5c4-f887cb4eda0d
+      type: similar
 status: experimental
 description: |
     Detects when a PHP worker spawns a suspicious child process.
@@ -8,6 +11,7 @@ description: |
 references:
     - https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w
     - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+    - https://www.wiz.io/blog/php2shell-php-rce
 author: Bartosz Garba
 date: 2026-10-22
 tags:

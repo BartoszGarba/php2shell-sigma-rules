@@ -6,10 +6,10 @@ Both bugs are memory corruption issues in php-src that can lead to RCE. Affected
 
 ## Rules
 
-| Rule                                                                                                     | Platform | Level | Status       |
-| -------------------------------------------------------------------------------------------------------- | -------- | ----- | ------------ |
-| [PHP Spawns Suspicious Child Process](rules/linux/process_creation/proc_creation_lnx_php_susp_child.yml) | Linux    | high  | experimental |
-| [PHP Spawns Suspicious Child Process - Windows](rules/windows/process_creation/proc_creation_win_php_susp_child.yml) | Windows  | high  | experimental |
+| Rule | Platform | Level | Status |
+| --- | --- | --- | --- |
+| [PHP Spawns Suspicious Child Process - Linux](rules/linux/process_creation/proc_creation_lnx_php_susp_child.yml) | Linux | high | experimental |
+| [PHP Spawns Suspicious Child Process - Windows](rules/windows/process_creation/proc_creation_win_php_susp_child.yml) | Windows | high | experimental |
 
 ## Approach
 
@@ -47,3 +47,7 @@ Replace `splunk` with the backend for your SIEM.
 - https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w
 - https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
 - https://www.wiz.io/blog/php2shell-php-rce
+
+## License
+
+[Detection Rule License (DRL) 1.1](LICENSE)
